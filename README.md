@@ -64,12 +64,19 @@ For detailed API documentation, see [API_DOCUMENTATION.md](./API_DOCUMENTATION.m
 
 The portal implements multiple security layers:
 
-- JWT-based authentication with NFT verification
-- Role-based access control (Seed, Leader, Commander, Sovereign)
-- Secure token management
-- Activity logging for all critical actions
+- **Rate Limiting**: Protection against brute force and DoS attacks
+  - Auth endpoints: 10 requests per 15 minutes
+  - General API: 100 requests per 15 minutes
+  - Sensitive operations: 20 requests per 15 minutes
+- **JWT-based Authentication**: Secure token-based authentication with NFT verification
+- **Role-based Access Control**: Four authorization levels (Seed, Leader, Commander, Sovereign)
+- **Activity Logging**: Comprehensive audit trail for all critical actions
+- **Input Validation**: Type-safe validation with TypeScript
+- **Secure Token Management**: Configurable JWT secrets with expiration
 
-**Important**: Change the `JWT_SECRET` in your `.env` file before deploying to production!
+**Important**: 
+- Change the `JWT_SECRET` in your `.env` file before deploying to production!
+- See [SECURITY.md](./SECURITY.md) for detailed security information and production deployment recommendations
 
 ## 🏗️ Architecture
 
