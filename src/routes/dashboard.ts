@@ -3,11 +3,13 @@ import { AuthRequest, authenticateNFT, requireLeadership } from '../middleware/a
 import { activityService } from '../services/activityService';
 import { memberStore } from '../services/memberService';
 import { certificationStore } from '../services/certificationService';
+import { apiLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All dashboard routes require authentication
+// All dashboard routes require authentication and rate limiting
 router.use(authenticateNFT);
+router.use(apiLimiter);
 
 /**
  * GET /api/dashboard/overview

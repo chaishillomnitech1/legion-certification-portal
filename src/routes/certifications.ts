@@ -3,17 +3,19 @@ import { AuthRequest, authenticateNFT, requireLeadership } from '../middleware/a
 import { certificationStore } from '../services/certificationService';
 import { memberStore } from '../services/memberService';
 import { activityService } from '../services/activityService';
+import { apiLimiter, sensitiveLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All certification routes require authentication
+// All certification routes require authentication and rate limiting
 router.use(authenticateNFT);
+router.use(apiLimiter);
 
 /**
  * POST /api/certifications/issue
  * Issue a new certification (leadership only)
  */
-router.post('/issue', requireLeadership, (req: AuthRequest, res: Response) => {
+router.post('/issue', sensitiveLimiter, requireLeadership, (req: AuthRequest, res: Response) => {
   try {
     const { memberId, type, metadata, expiresInDays } = req.body;
 
@@ -174,7 +176,7 @@ router.get('/:id', (req: AuthRequest, res: Response) => {
  * PUT /api/certifications/:id/revoke
  * Revoke a certification (leadership only)
  */
-router.put('/:id/revoke', requireLeadership, (req: AuthRequest, res: Response) => {
+router.put('/:id/revoke', sensitiveLimiter, requireLeadership, (req: AuthRequest, res: Response) => {
   try {
     const id = req.params.id as string;
     const { reason } = req.body;

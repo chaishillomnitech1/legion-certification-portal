@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config';
 import { memberStore } from '../services/memberService';
 import { activityService } from '../services/activityService';
+import { authLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const router = Router();
  * POST /api/auth/nft-login
  * NFT-based authentication endpoint
  */
-router.post('/nft-login', async (req: Request, res: Response) => {
+router.post('/nft-login', authLimiter, async (req: Request, res: Response) => {
   try {
     const { walletAddress, nftTokenId, signature } = req.body;
 
@@ -81,7 +82,7 @@ router.post('/nft-login', async (req: Request, res: Response) => {
  * POST /api/auth/verify
  * Verify current authentication token
  */
-router.post('/verify', async (req: Request, res: Response) => {
+router.post('/verify', authLimiter, async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
     

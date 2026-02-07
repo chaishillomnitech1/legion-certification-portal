@@ -3,6 +3,7 @@ import { AuthRequest, authenticateNFT } from '../middleware/auth';
 import { memberStore } from '../services/memberService';
 import { certificationStore } from '../services/certificationService';
 import { activityService } from '../services/activityService';
+import { apiLimiter, sensitiveLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
@@ -24,7 +25,7 @@ router.get('/health', (req, res: Response) => {
  * GET /api/federation/members
  * Get all members for federation integration
  */
-router.get('/members', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.get('/members', apiLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     const members = memberStore.getAllMembers();
     
@@ -51,7 +52,7 @@ router.get('/members', authenticateNFT, (req: AuthRequest, res: Response) => {
  * GET /api/federation/leadership
  * Get leadership roster for federation
  */
-router.get('/leadership', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.get('/leadership', apiLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     const leaders = memberStore.getLeaders();
     const leadershipCerts = certificationStore.getLeadershipCertifications();
@@ -83,7 +84,7 @@ router.get('/leadership', authenticateNFT, (req: AuthRequest, res: Response) => 
  * GET /api/federation/certifications
  * Get all active certifications for federation
  */
-router.get('/certifications', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.get('/certifications', apiLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     const allCertifications = certificationStore.getAllCertifications();
     const activeCerts = allCertifications.filter(c => c.status === 'active');
@@ -113,7 +114,7 @@ router.get('/certifications', authenticateNFT, (req: AuthRequest, res: Response)
  * GET /api/federation/activities
  * Get recent high-impact activities for federation
  */
-router.get('/activities', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.get('/activities', apiLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     const highImpactActivities = activityService.getActivitiesByImpact('high');
     const criticalActivities = activityService.getActivitiesByImpact('critical');
@@ -146,7 +147,7 @@ router.get('/activities', authenticateNFT, (req: AuthRequest, res: Response) => 
  * POST /api/federation/sync
  * Sync data with Galactic Federation (placeholder)
  */
-router.post('/sync', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.post('/sync', sensitiveLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     // In a real implementation, this would sync with external federation APIs
     const stats = {
@@ -179,7 +180,7 @@ router.post('/sync', authenticateNFT, (req: AuthRequest, res: Response) => {
  * GET /api/federation/expansion/stats
  * Get expansion statistics for Authority Grid
  */
-router.get('/expansion/stats', authenticateNFT, (req: AuthRequest, res: Response) => {
+router.get('/expansion/stats', apiLimiter, authenticateNFT, (req: AuthRequest, res: Response) => {
   try {
     const allMembers = memberStore.getAllMembers();
     const maxCapacity = 288000; // Total ScrollSoul Star Seeds capacity

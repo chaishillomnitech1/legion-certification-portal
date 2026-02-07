@@ -2,11 +2,13 @@ import { Router, Response } from 'express';
 import { AuthRequest, authenticateNFT, requireLeadership } from '../middleware/auth';
 import { memberStore } from '../services/memberService';
 import { activityService } from '../services/activityService';
+import { apiLimiter, sensitiveLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All member routes require authentication
+// All member routes require authentication and rate limiting
 router.use(authenticateNFT);
+router.use(apiLimiter);
 
 /**
  * GET /api/members/me
@@ -139,7 +141,7 @@ router.get('/:id', (req: AuthRequest, res: Response) => {
  * PUT /api/members/:id/role
  * Update member role (leadership only)
  */
-router.put('/:id/role', requireLeadership, (req: AuthRequest, res: Response) => {
+router.put('/:id/role', sensitiveLimiter, requireLeadership, (req: AuthRequest, res: Response) => {
   try {
     const id = req.params.id as string;
     const { role } = req.body;
