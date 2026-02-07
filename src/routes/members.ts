@@ -39,6 +39,36 @@ router.get('/me', (req: AuthRequest, res: Response) => {
 });
 
 /**
+ * GET /api/members/stats/overview
+ * Get member statistics
+ */
+router.get('/stats/overview', requireLeadership, (req: AuthRequest, res: Response) => {
+  try {
+    const allMembers = memberStore.getAllMembers();
+    const activeMembers = memberStore.getActiveMembers();
+    const leaders = memberStore.getLeaders();
+
+    const roleDistribution = allMembers.reduce((acc, member) => {
+      acc[member.role] = (acc[member.role] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    res.json({
+      success: true,
+      stats: {
+        totalMembers: allMembers.length,
+        activeMembers: activeMembers.length,
+        leaders: leaders.length,
+        roleDistribution
+      }
+    });
+  } catch (error) {
+    console.error('Get stats error:', error);
+    res.status(500).json({ error: 'Failed to retrieve statistics' });
+  }
+});
+
+/**
  * GET /api/members
  * Get all members (leadership only)
  */
@@ -143,36 +173,6 @@ router.put('/:id/role', requireLeadership, (req: AuthRequest, res: Response) => 
   } catch (error) {
     console.error('Update member role error:', error);
     res.status(500).json({ error: 'Failed to update member role' });
-  }
-});
-
-/**
- * GET /api/members/stats/overview
- * Get member statistics
- */
-router.get('/stats/overview', requireLeadership, (req: AuthRequest, res: Response) => {
-  try {
-    const allMembers = memberStore.getAllMembers();
-    const activeMembers = memberStore.getActiveMembers();
-    const leaders = memberStore.getLeaders();
-
-    const roleDistribution = allMembers.reduce((acc, member) => {
-      acc[member.role] = (acc[member.role] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    res.json({
-      success: true,
-      stats: {
-        totalMembers: allMembers.length,
-        activeMembers: activeMembers.length,
-        leaders: leaders.length,
-        roleDistribution
-      }
-    });
-  } catch (error) {
-    console.error('Get stats error:', error);
-    res.status(500).json({ error: 'Failed to retrieve statistics' });
   }
 });
 

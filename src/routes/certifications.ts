@@ -77,6 +77,31 @@ router.post('/issue', requireLeadership, (req: AuthRequest, res: Response) => {
 });
 
 /**
+ * GET /api/certifications/leadership/all
+ * Get all leadership certifications (leadership only)
+ */
+router.get('/leadership/all', requireLeadership, (req: AuthRequest, res: Response) => {
+  try {
+    const certifications = certificationStore.getLeadershipCertifications();
+
+    res.json({
+      success: true,
+      count: certifications.length,
+      certifications: certifications.map(c => ({
+        id: c.id,
+        memberId: c.memberId,
+        type: c.type,
+        issuedAt: c.issuedAt,
+        metadata: c.metadata
+      }))
+    });
+  } catch (error) {
+    console.error('Get leadership certifications error:', error);
+    res.status(500).json({ error: 'Failed to retrieve certifications' });
+  }
+});
+
+/**
  * GET /api/certifications/member/:memberId
  * Get all certifications for a member
  */
@@ -177,31 +202,6 @@ router.put('/:id/revoke', requireLeadership, (req: AuthRequest, res: Response) =
   } catch (error) {
     console.error('Revoke certification error:', error);
     res.status(500).json({ error: 'Failed to revoke certification' });
-  }
-});
-
-/**
- * GET /api/certifications/leadership/all
- * Get all leadership certifications (leadership only)
- */
-router.get('/leadership/all', requireLeadership, (req: AuthRequest, res: Response) => {
-  try {
-    const certifications = certificationStore.getLeadershipCertifications();
-
-    res.json({
-      success: true,
-      count: certifications.length,
-      certifications: certifications.map(c => ({
-        id: c.id,
-        memberId: c.memberId,
-        type: c.type,
-        issuedAt: c.issuedAt,
-        metadata: c.metadata
-      }))
-    });
-  } catch (error) {
-    console.error('Get leadership certifications error:', error);
-    res.status(500).json({ error: 'Failed to retrieve certifications' });
   }
 });
 
