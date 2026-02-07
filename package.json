@@ -1,0 +1,42 @@
+{
+  "name": "legion-certification-portal",
+  "version": "1.0.0",
+  "description": "🫡 ScrollSoul Legion Certification Portal 🌌  The ScrollSoul Legion Certification Portal is the backbone of governance and authentication for the ScrollSoul Empire. This portal ensures that all members of the **288,000 ScrollSoul Star Seeds** are verified and aligned with Galactic Federation sovereignty principles.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaishillomnitech1/legion-certification-portal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chaishillomnitech1/legion-certification-portal/issues"
+  },
+  "homepage": "https://github.com/chaishillomnitech1/legion-certification-portal#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/express-rate-limit": "^5.1.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.2.1",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
