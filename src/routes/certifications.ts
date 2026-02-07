@@ -7,9 +7,10 @@ import { apiLimiter, sensitiveLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All certification routes require authentication and rate limiting
-router.use(authenticateNFT);
+// Apply rate limiting before authentication
 router.use(apiLimiter);
+// All certification routes require authentication
+router.use(authenticateNFT);
 
 /**
  * POST /api/certifications/issue

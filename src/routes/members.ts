@@ -6,9 +6,10 @@ import { apiLimiter, sensitiveLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All member routes require authentication and rate limiting
-router.use(authenticateNFT);
+// Apply rate limiting before authentication
 router.use(apiLimiter);
+// All member routes require authentication
+router.use(authenticateNFT);
 
 /**
  * GET /api/members/me

@@ -7,9 +7,10 @@ import { apiLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
-// All dashboard routes require authentication and rate limiting
-router.use(authenticateNFT);
+// Apply rate limiting before authentication
 router.use(apiLimiter);
+// All dashboard routes require authentication
+router.use(authenticateNFT);
 
 /**
  * GET /api/dashboard/overview
